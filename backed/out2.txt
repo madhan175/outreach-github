@@ -1,7 +1,0 @@
-{
-  "status": "VERIFIED",
-  "revealed": false,
-  "email": "t********@stripe.com",
-  "verification_method": "BOUNCEBAN",
-  "email_mx_provider": "Google"
-}
