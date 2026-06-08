@@ -1,0 +1,45 @@
+# Python
+.venv/
+venv/
+ENV/
+env/
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.coverage
+coverage/
+htmlcov/
+
+# Packaging
+pip-wheel-metadata/
+*.egg-info/
+dist/
+build/
+
+# Node
+node_modules/
+dist/
+build/
+.env
+npm-debug.log*
+yarn-error.log*
+pnpm-lock.yaml
+package-lock.json
+
+# IDEs and editors
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Misc
+.deploy/
+.cache/
