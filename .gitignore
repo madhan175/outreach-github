@@ -21,11 +21,22 @@ build/
 node_modules/
 dist/
 build/
+
+# Environment files
 .env
-npm-debug.log*
-yarn-error.log*
+.env.local
+.env.*
 pnpm-lock.yaml
 package-lock.json
+
+# Vite
+/.vite
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.log
 
 # IDEs and editors
 .vscode/
@@ -36,9 +47,6 @@ package-lock.json
 # OS files
 .DS_Store
 Thumbs.db
-
-# Logs
-*.log
 
 # Misc
 .deploy/
