@@ -1,6 +1,8 @@
+<<<<<<< HEAD
+# Outreach
 # Outreach
 
-This folder contains the React + Vite frontend used with the ReachFlow outreach backend.
+This repository contains the outreach backend and frontend.
 
 This README gives quick setup and usage instructions for the full project (backend + frontend).
 
@@ -8,7 +10,7 @@ This README gives quick setup and usage instructions for the full project (backe
 
 ## Project layout
 
-- `backed/` — FastAPI backend that runs the outreach pipeline (Apollo → Prospeo → Brevo).
+- `backend/` — FastAPI backend that runs the outreach pipeline (Apollo → Prospeo → Brevo).
 - `my-app/` — React + Vite frontend that can show pipeline runs and logs.
 
 ---
@@ -31,21 +33,26 @@ python -m venv .venv
 2. Install backend dependencies:
 
 ```powershell
-cd backed
+cd backend
 pip install -r requirements.txt
 ```
 
 3. Configure environment variables. Create `backend/.env` with at least the required keys:
 
-APOLLO_API_KEY=your_apollo_api_key
-PROSPEO_API_KEY=your_prospeo_api_key
-BREVO_API_KEY=your_brevo_api_key
+- `APOLLO_API_KEY` — Apollo API key
+- `PROSPEO_API_KEY` — Prospeo API key
+- `BREVO_API_KEY` — Brevo (Sendinblue) API key
+- Optional: `BREVO_SENDER_EMAIL`, `BREVO_SENDER_NAME`, `BREVO_CAMPAIGN_LIST_IDS`
 
-BREVO_SENDER_EMAIL=your_email@example.com
-BREVO_SENDER_NAME=your_sender_name
+Example `backend/.env`:
 
-BREVO_CAMPAIGN_LIST_IDS=5
-
+```text
+APOLLO_API_KEY=your_apollo_key
+PROSPEO_API_KEY=your_prospeo_key
+BREVO_API_KEY=your_brevo_key
+BREVO_SENDER_EMAIL=you@yourdomain.com
+BREVO_SENDER_NAME=Your Name
+```
 4. Run the backend (development):
 
 ```powershell
