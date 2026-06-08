@@ -11,6 +11,10 @@ The platform consists of a FastAPI backend that orchestrates the outreach pipeli
 ```bash
 git clone https://github.com/madhan175/outreach-github.git
 cd outreach-github
+cd backend 
+cd frontend 
+
+
 ```
 
 ---
