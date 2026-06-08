@@ -1,113 +1,386 @@
-<<<<<<< HEAD
-# Outreach
-# Outreach
+# ReachFlow – Automated Outreach Pipeline
 
-This repository contains the outreach backend and frontend.
+ReachFlow is a full-stack outreach automation platform that discovers target companies, finds decision-maker contacts, enriches lead data, and executes email outreach campaigns through Brevo.
 
-This README gives quick setup and usage instructions for the full project (backend + frontend).
+The platform consists of a FastAPI backend that orchestrates the outreach pipeline and a React frontend that provides real-time monitoring, run history, and campaign controls.
 
 ---
 
-## Project layout
+## Repository
 
-- `backend/` — FastAPI backend that runs the outreach pipeline (Apollo → Prospeo → Brevo).
-- `my-app/` — React + Vite frontend that can show pipeline runs and logs.
+```bash
+git clone https://github.com/madhan175/outreach-github.git
+cd outreach-github
+```
 
 ---
 
-## Requirements
+## Architecture
 
-- Python 3.10+ (for backend)
-- Node.js 16+ and npm/yarn (for frontend)
-- A Brevo account and API key if you intend to send real emails
+```text
+┌─────────────┐
+│ React UI    │
+│ (Vite)      │
+└──────┬──────┘
+       │ REST + SSE
+       ▼
+┌─────────────┐
+│ FastAPI     │
+│ Backend     │
+└──────┬──────┘
+       │
+ ┌─────┼─────────────────────┐
+ ▼     ▼                     ▼
+Apollo Prospeo           Brevo
+Company Contact          Email
+Search  Enrichment       Delivery
+```
 
-## Backend setup (quick)
+---
 
-1. Create and activate a Python virtual environment in the workspace root:
+## Features
+
+### Lead Discovery
+
+* Search companies using Apollo
+* Generate lookalike companies
+* Domain-based prospecting
+
+### Contact Enrichment
+
+* Find decision-makers
+* Enrich contact information
+* Validate email addresses
+
+### Outreach Automation
+
+* Brevo campaign creation
+* Transactional email fallback
+* Sender verification support
+* Marketing list integration
+
+### Real-Time Monitoring
+
+* Live pipeline logs
+* Server-Sent Events (SSE)
+* Run history tracking
+* Status monitoring
+
+### Safety Controls
+
+* Dry-run mode
+* Manual send confirmation
+* Campaign validation
+* Error recovery and fallbacks
+
+---
+
+## Project Structure
+
+```text
+reachflow/
+│
+├── backend/
+│   ├── api.py
+│   ├── requirements.txt
+│   └── .env
+│
+├── frontend/
+│   ├── src/
+│   │   ├── App.jsx
+│   │   └── main.jsx
+│   ├── package.json
+│   └── vite.config.js
+│
+├── stages/
+│   ├── stage1_apollo.py
+│   ├── stage2_prospeo.py
+│   └── stage4_brevo.py
+│
+├── utils/
+│
+└── README.md
+```
+
+---
+
+## Technology Stack
+
+### Backend
+
+* Python 3.10+
+* FastAPI
+* Uvicorn
+* Requests
+* SSE Streaming
+
+### Frontend
+
+* React
+* Vite
+* JavaScript
+* CSS
+
+### Integrations
+
+* Apollo API
+* Prospeo API
+* Brevo API
+
+---
+
+## Environment Variables
+
+Create a `.env` file:
+
+```env
+APOLLO_API_KEY=your_apollo_api_key
+PROSPEO_API_KEY=your_prospeo_api_key
+
+BREVO_API_KEY=your_brevo_api_key
+BREVO_SENDER_EMAIL=your_sender_email
+BREVO_SENDER_NAME=your_sender_name
+BREVO_CAMPAIGN_LIST_IDS=5
+```
+
+---
+
+## Backend Setup
+
+### Create Virtual Environment
 
 ```powershell
 python -m venv .venv
 . .venv/Scripts/Activate.ps1
 ```
 
-2. Install backend dependencies:
+### Install Dependencies
 
 ```powershell
 cd backend
 pip install -r requirements.txt
 ```
 
-3. Configure environment variables. Create `backend/.env` with at least the required keys:
-
-- `APOLLO_API_KEY` — Apollo API key
-- `PROSPEO_API_KEY` — Prospeo API key
-- `BREVO_API_KEY` — Brevo (Sendinblue) API key
-- Optional: `BREVO_SENDER_EMAIL`, `BREVO_SENDER_NAME`, `BREVO_CAMPAIGN_LIST_IDS`
-
-Example `backend/.env`:
-
-```text
-APOLLO_API_KEY=your_apollo_key
-PROSPEO_API_KEY=your_prospeo_key
-BREVO_API_KEY=your_brevo_key
-BREVO_SENDER_EMAIL=you@yourdomain.com
-BREVO_SENDER_NAME=Your Name
-```
-4. Run the backend (development):
+### Start Backend
 
 ```powershell
-cd backed
-uvicorn main:app --reload --port 8000
+uvicorn api:app --reload --port 8000
 ```
 
-The API health endpoint is `GET /api/health`.
+Backend URL:
 
-## Frontend setup (quick)
+```text
+http://localhost:8000
+```
 
-1. Install dependencies and run the dev server:
+Swagger Documentation:
+
+```text
+http://localhost:8000/docs
+```
+
+---
+
+## Frontend Setup
+
+Install dependencies:
 
 ```bash
-cd my-app
+cd frontend
 npm install
+```
+
+Run development server:
+
+```bash
 npm run dev
 ```
 
-2. The frontend dev server runs on `http://localhost:5173` by default.
+Frontend URL:
+
+```text
+http://localhost:5173
+```
 
 ---
 
-## Using the outreach pipeline (backend API)
+## API Endpoints
 
-- Start the backend as above.
-- The pipeline is triggered with `POST /api/run`.
+### Health Check
 
-Example run (dry run):
-
-```bash
-curl -X POST http://localhost:8000/api/run -H "Content-Type: application/json" -d '{"domain":"stripe.com","limit":3,"dry_run":true}'
+```http
+GET /api/health
 ```
 
-This returns a `run_id`. You can stream live logs via Server-Sent Events at `/api/stream/{run_id}`.
+### Create Pipeline Run
 
-To perform a real send (will actually send emails), create a run with `dry_run=false` and then call:
-
-```bash
-curl -X POST http://localhost:8000/api/send/{run_id}
+```http
+POST /api/run
 ```
 
-Notes & safety
-- The backend includes a safety checkpoint: runs created with `dry_run=false` will pause at a checkpoint and only proceed to send when `/api/send/{run_id}` is called.
-- Brevo may block API calls if your public IP is not authorised (account security setting). If you see a 401 mentioning `authorised_ips` or `unrecognised IP`, add the public IP shown in logs to: https://app.brevo.com/security/authorised_ips
+Request:
 
-## Common troubleshooting
+```json
+{
+  "domain": "stripe.com",
+  "limit": 5,
+  "dry_run": false
+}
+```
 
-- Missing API keys: ensure `backed/.env` contains the required keys. The backend prints guidance if keys are missing.
-- IP blocking: see the Brevo authorised IPs message above.
-- If campaign creation fails but transactional sends are allowed, the pipeline will fall back to sending per-contact transactional emails.
+### Get Run
 
-## Gitignore and repo files
-This repository includes a `.gitignore` at the workspace root to exclude local envs, node_modules, build artifacts and secrets (see workspace root `.gitignore`).
+```http
+GET /api/run/{id}
+```
+
+### List Runs
+
+```http
+GET /api/runs
+```
+
+### Live Logs
+
+```http
+GET /api/stream/{id}
+```
+
+### Confirm Send
+
+```http
+POST /api/send/{id}
+```
+
+### Cancel Run
+
+```http
+POST /api/cancel/{id}
+```
 
 ---
 
-If you'd like, I can also add a top-level `README.md` that focuses on the backend and deployment; tell me what you'd prefer to appear first.
+## Pipeline Flow
+
+### Stage 1 – Apollo
+
+Input:
+
+```text
+stripe.com
+```
+
+Output:
+
+```text
+Lookalike companies
+```
+
+### Stage 2 – Prospeo
+
+Input:
+
+```text
+Company domains
+```
+
+Output:
+
+```text
+Decision-maker contacts
+Verified emails
+```
+
+### Stage 3 – Brevo
+
+Input:
+
+```text
+Contacts
+```
+
+Output:
+
+```text
+Campaign creation
+Email delivery
+Tracking
+```
+
+---
+
+## Testing
+
+The project has been tested end-to-end.
+
+Completed validation:
+
+* API integrations verified
+* Contact enrichment tested
+* Campaign creation tested
+* Sender verification tested
+* SSE log streaming tested
+* Frontend-backend communication verified
+
+### Result
+
+```text
+All test cases passed successfully.
+```
+
+---
+
+## Security
+
+* Environment variables stored locally
+* API keys excluded from Git
+* Dry-run safety mode enabled
+* Manual send confirmation required
+* Brevo sender validation supported
+
+---
+
+## Production Recommendations
+
+Before deployment:
+
+* Replace in-memory storage with PostgreSQL
+* Add JWT authentication
+* Add rate limiting
+* Configure HTTPS
+* Add monitoring and logging
+* Deploy with Docker
+* Use Gunicorn + Uvicorn workers
+
+Example:
+
+```bash
+gunicorn -k uvicorn.workers.UvicornWorker api:app
+```
+
+---
+
+## Future Enhancements
+
+* CRM integration
+* Multi-user support
+* Campaign analytics dashboard
+* Scheduled outreach
+* AI-generated email personalization
+* PostgreSQL persistence
+* Docker deployment
+
+---
+
+## Author
+
+Madhan D
+
+GitHub:
+https://github.com/madhan175
+
+---
+
+## License
+
+This project is provided for educational and evaluation purposes.
