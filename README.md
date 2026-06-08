@@ -1,4 +1,4 @@
-# Outreach (frontend)
+# Outreach
 
 This folder contains the React + Vite frontend used with the ReachFlow outreach backend.
 
