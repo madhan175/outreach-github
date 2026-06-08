@@ -1,0 +1,72 @@
+{
+  "keys": [
+    "error",
+    "results",
+    "pagination",
+    "free"
+  ],
+  "results_0": [
+    "person",
+    "company"
+  ],
+  "person_keys": [
+    "person_id",
+    "first_name",
+    "last_name",
+    "full_name",
+    "linkedin_url",
+    "current_job_title",
+    "current_job_key",
+    "headline",
+    "linkedin_member_id",
+    "last_job_change_detected_at",
+    "job_history",
+    "mobile",
+    "email",
+    "location",
+    "skills"
+  ],
+  "company_keys": [
+    "company_id",
+    "name",
+    "website",
+    "domain",
+    "other_websites",
+    "description",
+    "description_seo",
+    "description_ai",
+    "type",
+    "industry",
+    "employee_count",
+    "employee_count_on_prospeo",
+    "employee_range",
+    "location",
+    "sic_codes",
+    "naics_codes",
+    "email_tech",
+    "linkedin_url",
+    "twitter_url",
+    "facebook_url",
+    "crunchbase_url",
+    "instagram_url",
+    "youtube_url",
+    "phone_hq",
+    "linkedin_id",
+    "founded",
+    "revenue_range",
+    "revenue_range_printed",
+    "keywords",
+    "logo_url",
+    "attributes",
+    "funding",
+    "technology",
+    "job_postings"
+  ],
+  "email_preview": {
+    "status": "VERIFIED",
+    "revealed": false,
+    "email": "t*****@stripe.com",
+    "verification_method": "BOUNCEBAN",
+    "email_mx_provider": "Google"
+  }
+}
